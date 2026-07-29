@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TDRIVE Ficha</title>
+  <style>
+    body{font-family:Arial;background:#667eea;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .container{background:white;padding:40px;border-radius:10px;width:90%;max-width:500px;}
+    h1{color:#333;margin-bottom:30px;}
+    input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:5px;}
+    button{width:100%;padding:12px;background:#667eea;color:white;border:none;border-radius:5px;cursor:pointer;margin-top:10px;font-weight:bold;}
+    .status{margin-top:15px;padding:10px;border-radius:5px;text-align:center;display:none;}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>📋 Ficha Automática</h1>
+  <input id="cpf" placeholder="CPF" required>
+  <input id="rg" placeholder="RG" required>
+  <input id="data" type="date" required>
+  <button onclick="enviar()">Enviar</button>
+  <div id="status" class="status"></div>
+</div>
+<script>
+async function enviar(){
+  const cpf=document.getElementById('cpf').value;
+  const rg=document.getElementById('rg').value;
+  const data=document.getElementById('data').value;
+  if(!cpf||!rg||!data){alert('Preencha todos os campos');return;}
+  const status=document.getElementById('status');
+  status.textContent='Enviando...';
+  status.style.display='block';
+  const res=await fetch('/api/enviar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cpf,rg,data})});
+  const r=await res.json();
+  if(r.success)status.textContent='✅ '+r.message;
+  else status.textContent='❌ Erro: '+r.error;
+}
+</script>
+</body>
+</html>
